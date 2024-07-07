@@ -8,6 +8,10 @@ block_lst = []
 
 counter = 0
 
+score = 0
+
+WIDTH_OF_BLOCK = 250
+
 gameover = False
 class Bird:
     def __init__(self):
@@ -37,7 +41,7 @@ class Block:
     def __init__(self , x , y , side):
         self.x = x
         self.y = y
-        
+        self.marked = False
         self.side = side
         
         self.width = 100
@@ -61,20 +65,25 @@ class Block:
         screen.blit(self.surface , self.surface_rect)
 def create_block():
     mid = random.randint(150 , 550)
-    top = mid - 125
-    bottom = mid + 125
+    top = mid - WIDTH_OF_BLOCK / 2
+    bottom = mid + WIDTH_OF_BLOCK / 2
     
     block_lst.append(Block(WIDTH , top , "top"))
     block_lst.append(Block(WIDTH , bottom , "bottom"))
     
 def check():
-    global gameover
+    global gameover , score
     if bird.y - 20 > HEIGHT:
         gameover = True
     for block in block_lst:
         if block.surface_rect.colliderect(bird.surface_rect):
             gameover = True
-def draw():
+        if block.x + block.width < bird.x and not block.marked:
+            score += 5
+            block.marked = True
+
+def draw(score_text):
+
     if not gameover:
         bird.update()
     bird.draw()
@@ -85,12 +94,15 @@ def draw():
         block.draw()
         if block.x < 0 - block.width:
             block_lst.remove(block)
+    score1_text = score_text.render(f"Score : {score}" , True , "black")
+    score_text_rect = score1_text.get_rect(center = (50 , 30))
+    screen.blit(score1_text , score_text_rect)
 
 pygame.init()
 screen = pygame.display.set_mode( (WIDTH , HEIGHT) )
-
 clock = pygame.time.Clock()
 
+score_text = pygame.font.Font(None , 30)
 
 while True:
     screen.fill("white")
@@ -103,7 +115,7 @@ while True:
         if event.type == pygame.KEYDOWN and not gameover:
             if event.key == pygame.K_SPACE:
                 bird.jump()
-    draw()
+    draw(score_text)
     if not gameover:
         check()
         if counter % 150 == 0:
