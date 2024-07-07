@@ -8,6 +8,7 @@ block_lst = []
 
 counter = 0
 
+gameover = False
 class Bird:
     def __init__(self):
         self.x = 300
@@ -42,8 +43,12 @@ class Block:
         self.width = 100
         if side == "top":
             self.surface = pygame.Surface( (self.width , self.y) )
+            self.surface_rect = self.surface.get_rect(bottomleft = (self.x , self.y))
+            
         else:
             self.surface = pygame.Surface( (self.width , HEIGHT - self.y) )
+            self.surface_rect = self.surface.get_rect(topleft = (self.x , self.y))
+            
         self.surface.fill("green")
     def update(self):
         self.x -= 2
@@ -62,13 +67,21 @@ def create_block():
     block_lst.append(Block(WIDTH , top , "top"))
     block_lst.append(Block(WIDTH , bottom , "bottom"))
     
-    
+def check():
+    global gameover
+    if bird.y - 20 > HEIGHT:
+        gameover = True
+    for block in block_lst:
+        if block.surface_rect.colliderect(bird.surface_rect):
+            gameover = True
 def draw():
-    bird.update()
+    if not gameover:
+        bird.update()
     bird.draw()
     
     for block in block_lst:
-        block.update()
+        if not gameover:
+            block.update()
         block.draw()
         if block.x < 0 - block.width:
             block_lst.remove(block)
@@ -87,12 +100,14 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-        if event.type == pygame.KEYDOWN:
+        if event.type == pygame.KEYDOWN and not gameover:
             if event.key == pygame.K_SPACE:
                 bird.jump()
-    if counter % 150 == 0:
-        create_block()
     draw()
+    if not gameover:
+        check()
+        if counter % 150 == 0:
+            create_block()
     counter += 1    
     pygame.display.update()
     clock.tick(60)
