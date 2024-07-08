@@ -98,6 +98,16 @@ def draw(score_text):
     score_text_rect = score1_text.get_rect(center = (50 , 30))
     screen.blit(score1_text , score_text_rect)
 
+def restart():
+    global counter , block_lst , score , gameover    
+    counter = 0
+    block_lst = []
+    score = 0
+    gameover = False
+    bird.x = 300
+    bird.y = 200
+    bird.velocity = -10
+
 pygame.init()
 screen = pygame.display.set_mode( (WIDTH , HEIGHT) )
 clock = pygame.time.Clock()
@@ -112,9 +122,13 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-        if event.type == pygame.KEYDOWN and not gameover:
+        if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                bird.jump()
+                if not gameover :
+                    bird.jump()
+                else:
+                    restart()
+                
     draw(score_text)
     if not gameover:
         check()
