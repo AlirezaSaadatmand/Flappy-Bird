@@ -25,7 +25,7 @@ class Bird:
         self.surface.fill("red")
     def jump(self):
         self.velocity = -15
-        self.y -= 30
+        self.y -= 25
     
     def update(self):
         self.velocity += self.gravity
