@@ -1,4 +1,6 @@
-Flappy Bird game that has no graphics
+Flappy Bird game that has no graphics .
+
+I will try to improve it .
 
 hope you enjoy :)
 
