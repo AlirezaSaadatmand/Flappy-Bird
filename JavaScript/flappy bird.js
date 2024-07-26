@@ -17,37 +17,59 @@ class Bird{
         this.y += this.velocity;
     }
     draw(){
-
+        ctx.fillStyle = "red";
+        ctx.fillRect(this.x , this.y , 30 , 30);
     }
 }
 
-let bird = Bird(300 , 300);
+const bird = new Bird(300 , 300);
 class Wall{
     constructor(x , y , side){
-        this.width = 40;
+        this.width = 100;
         this.side = side;
         this.leftX = x;
         this.rightX = x + this.width;
+        this.y = y;
     }
     update(){
-        this.x -= 2;
+        this.leftX -= 2;
+        this.rightX -= 2
     }
     draw(){
-
+        if (this.side == "up"){
+            ctx.fillStyle = "green";
+            ctx.fillRect(this.leftX , 0 , this.width , this.y);
+        }else{
+            ctx.fillStyle = "green";
+            ctx.fillRect(this.leftX , this.y , this.width , innerHeight - this.y);
+        }
     }
+}
 
+function createWall(){
+    setInterval(() => {
+        let y = Math.floor(Math.random() * (innerHeight - 400)) + 201;
+        wallLst.push(new Wall(innerWidth , y - 150 , "up"));
+        wallLst.push(new Wall(innerWidth , y + 150 , "down"))
+    }, 2000);
 }
-function draw(){
-    wallLst.forEach((wall) => {
-        wall.update();
-        wall.draw();
-    })
-    bird.update();
-    bird.draw();
-}
-let = animationId;
+createWall()
+let animationId;
 
 function animate(){
     animationId = requestAnimationFrame(animate);
-
+    ctx.fillStyle = "white";
+    ctx.fillRect(0 , 0, innerWidth , innerHeight);
+    wallLst.forEach((wall) => {
+        wall.update();
+        wall.draw();
+        if (wall.x < -100){
+            wallLst.splice(wallLst.indexOf(wall) , 1)
+        }
+    })
+    bird.update();
+    bird.draw();
+    console.log(wallLst);
 }
+
+animate();
