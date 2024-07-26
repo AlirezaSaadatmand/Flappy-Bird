@@ -67,21 +67,50 @@ function createWall(){
     }, 2000);
 }
 createWall()
+
+function checkEndGame(){
+    let lst = wallLst.slice(0 , 4);
+    let gameOver;
+
+    if(bird.y > innerHeight || bird.y + 30 < 0){
+        cancelAnimationFrame(animationId);
+    }
+    lst.forEach((wall) => {
+        if (wall.side == "up"){
+            if (bird.x + 30 > wall.leftX && bird.x < wall.rightX && bird.y < wall.y){
+                gameOver = true;
+            }
+        }else{
+            if (bird.x + 30 > wall.leftX && bird.x < wall.rightX && bird.y + 30 > wall.y){
+                gameOver = true;
+            }
+        }
+    });
+    if (gameOver){
+        cancelAnimationFrame(animationId);
+    }
+}
+
 let animationId;
 
 function animate(){
     animationId = requestAnimationFrame(animate);
+    checkEndGame();
+
+
     ctx.fillStyle = "white";
     ctx.fillRect(0 , 0, innerWidth , innerHeight);
     wallLst.forEach((wall) => {
         wall.update();
         wall.draw();
-        if (wall.x < -100){
-            wallLst.splice(wallLst.indexOf(wall) , 1)
+        if (wall.leftX  + wall.width < 0){
+            wallLst.splice(wallLst.indexOf(wall) , 1);
         }
     })
+
     bird.update();
     bird.draw();
+    console.log(wallLst.length);
 }
 
 animate();

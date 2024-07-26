@@ -73,7 +73,7 @@ def create_block():
     
 def check():
     global gameover , score
-    if bird.y - 20 > HEIGHT:
+    if bird.y - 20 > HEIGHT or bird.y + 20 < 0:
         gameover = True
     for block in block_lst:
         if block.surface_rect.colliderect(bird.surface_rect):
