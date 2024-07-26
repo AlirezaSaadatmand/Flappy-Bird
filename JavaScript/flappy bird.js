@@ -9,12 +9,16 @@ class Bird{
     constructor(x, y){
         this.x = x;
         this.y = y;
-        this.velocity = 0;
-        this.acceleration = 0;
+        this.velocity = -20;
+        this.acceleration = 1;
     }
     update(){
         this.velocity += this.acceleration;
         this.y += this.velocity;
+    }
+    jump(){
+        this.velocity = -17;
+        this.y -= 10;
     }
     draw(){
         ctx.fillStyle = "red";
@@ -33,7 +37,7 @@ class Wall{
     }
     update(){
         this.leftX -= 2;
-        this.rightX -= 2
+        this.rightX -= 2;
     }
     draw(){
         if (this.side == "up"){
@@ -45,6 +49,15 @@ class Wall{
         }
     }
 }
+
+addEventListener("keydown" , (event) => {
+    if (event.code == "Space"){
+        bird.jump();
+    }
+});
+addEventListener( "ontouchstart" , () =>{
+    bird.jump();
+});
 
 function createWall(){
     setInterval(() => {
@@ -69,7 +82,6 @@ function animate(){
     })
     bird.update();
     bird.draw();
-    console.log(wallLst);
 }
 
 animate();
