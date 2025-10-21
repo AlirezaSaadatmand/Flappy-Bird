@@ -34,6 +34,7 @@ class Wall{
         this.leftX = x;
         this.rightX = x + this.width;
         this.y = y;
+        this.scored = false
     }
     update(){
         this.leftX -= 2;
@@ -93,7 +94,10 @@ function checkEndGame(){
 
 let animationId;
 
+let score = 0
+let scoreElement = document.querySelector("#score");
 function animate(){
+    scoreElement.innerHTML = score;
     animationId = requestAnimationFrame(animate);
     checkEndGame();
 
@@ -103,6 +107,10 @@ function animate(){
     wallLst.forEach((wall) => {
         wall.update();
         wall.draw();
+        if (wall.leftX < bird.x && !wall.scored){
+            score = score + 0.5
+            wall.scored = true
+        }
         if (wall.leftX  + wall.width < 0){
             wallLst.splice(wallLst.indexOf(wall) , 1);
         }
